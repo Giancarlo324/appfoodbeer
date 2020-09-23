@@ -1,164 +1,72 @@
 import React, { Component } from 'react';
-import { Text,
-  FlatList,
-  Image,
-  StyleSheet,
-  Dimensions,
-  View,
-  ScrollView,
-  TouchableOpacity,
-  TextInput
-} from 'react-native';
-var {height, width } = Dimensions.get('window');
-import Swiper from 'react-native-swiper'
+import { Text, View, TextInput, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
+var { width } = Dimensions.get("window")
 
-export default class App extends Component {
+// import Components
+import Food from './Food'
+import Cart from './Cart'
+import Address from './Address'
+import Profile from './Profile'
+// unable console yellow
+console.disableYellowBox = true;
+// import icons
+import Icon from 'react-native-vector-icons/Ionicons';
 
-  constructor(props)
-  {
+export default class Index extends Component {
+
+  constructor(props) {
     super(props);
     this.state = {
-      dataBanner:[],
-      dataCategories:[],
-      dataFood:[],
-      selectCatg:0
-    }
-  }
-
-  componentDidMount(){
-    const url = "http://tutofox.com/foodapp/api.json"
-    return fetch(url)
-    .then((response) => response.json())
-    .then((responseJson) => {
-
-      this.setState({
-        isLoading: false,
-        dataBanner: responseJson.banner,
-        dataCategories: responseJson.categories,
-        dataFood:responseJson.food
-      });
-
-    })
-    .catch((error) =>{
-      console.error(error);
-    });
+      module: 1,
+    };
   }
 
   render() {
     return (
-      <ScrollView>
-        <View style={{ flex: 1,backgroundColor:"#f2f2f2" }}>
-          <View style={{width: width, alignItems:'center'}} >
-              <Image style={{height:60,width:width/2,margin:10 }} resizeMode="contain" source={{uri: 'http://tutofox.com/foodapp/foodapp.png'}}  />
-              <Swiper loop={false} style={{height:width/2}} showsButtons={false} autoplay={true} autoplayTimeout={2} showsPagination={false}>
-              {
-                  this.state.dataBanner.map((itembann)=>{
-                    return(
-                      <Image style={styles.imageBanner} resizeMode="contain" source={{uri:itembann}} key="1"/>
-                    )
-                  })
-                }
-              </Swiper>
-              <View style={{height:20}} />
-          </View>
-
-          <View style={{width:width, borderRadius:20, paddingVertical:20, backgroundColor:'white'}}>
-            <Text style={styles.titleCatg}>Categories {this.state.selectCatg}</Text>
-            <FlatList
-              horizontal={true}
-              data={this.state.dataCategories}
-              renderItem={({ item }) => this._renderItem(item)}
-              keyExtractor = { (item,index) => index.toString() }
-            />
-            <FlatList
-              //horizontal={true}
-              data={this.state.dataFood}
-              numColumns={2}
-              renderItem={({ item }) => this._renderItemFood(item)}
-              keyExtractor = { (item,index) => index.toString() }
-            />
-            <View style={{height:20}} />
-          </View>
-
+      <View style={{ flex: 1 }}>
+        {
+          this.state.module == 1 ? <Food />
+            : this.state.module == 2 ? <Cart />
+              : this.state.module == 3 ? <Address />
+                : <Profile />
+        }
+        <View style={styles.bottomTab}>
+          <TouchableOpacity style={styles.itemTab} onPress={() => this.setState({ module: 1 })}>
+            <Icon name="md-restaurant" size={30} color={this.state.module == 1 ? "#900" : "gray"} />
+            <Text>Food</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.itemTab} onPress={() => this.setState({ module: 2 })}>
+            <Icon name="md-basket" size={30} color={this.state.module == 2 ? "#900" : "gray"} />
+            <Text>Cart</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.itemTab} onPress={() => this.setState({ module: 3 })}>
+            <Icon name="md-map" size={30} color={this.state.module == 3 ? "#900" : "gray"} />
+            <Text>Address</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.itemTab} onPress={() => this.setState({ module: 4 })}>
+            <Icon name="person-circle-outline" size={30} color={this.state.module == 4 ? "#900" : "gray"} />
+            <Text>Profile</Text>
+          </TouchableOpacity>
         </View>
-      </ScrollView>
+      </View>
     );
   }
-
-  _renderItemFood(item){
-    let catg = this.state.selectCatg
-    if(catg==0||catg==item.categorie)
-    {
-      return(
-        <TouchableOpacity style={styles.divFood}>
-          <Image
-            style={styles.imageFood}
-            resizeMode="contain"
-            source={{uri:item.image}} />
-            <View style={{height:((width/2)-20)-90, backgroundColor:'transparent', width:((width/2)-20)-10}} />
-            <Text style={{fontWeight:'bold',fontSize:22,textAlign:'center'}}>
-              {item.name}
-            </Text>
-            <Text>Descp Food and Details</Text>
-            <Text style={{fontSize:20,color:"green"}}>${item.price}</Text>
-          </TouchableOpacity>
-        )
-    }
-  }
-
-  _renderItem(item){
-    return(
-      <TouchableOpacity style={[styles.divCategorie,{backgroundColor:item.color}]}
-      onPress={()=>this.setState({selectCatg:item.id})}>
-        <Image
-          style={{width:100,height:80}}
-          resizeMode="contain"
-          source={{uri : item.image}} />
-        <Text style={{fontWeight:'bold',fontSize:22}}>{item.name}</Text>
-      </TouchableOpacity>
-    )
-  }
-
 }
-
-
 const styles = StyleSheet.create({
-  imageBanner: {
-    height:width/2,
-    width:width-40,
-    borderRadius:10,
-    marginHorizontal:20
+  bottomTab: {
+    height: 60,
+    width: width,
+    backgroundColor: 'orange',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    elevation: 8,
+    shadowOpacity: 0.3,
+    shadowRadius: 50,
   },
-  divCategorie:{
-    backgroundColor:'red',
-    margin:5, alignItems:'center',
-    borderRadius:10,
-    padding:10
-  },
-  titleCatg:{
-    fontSize:30,
-    fontWeight:'bold',
-    textAlign:'center',
-    marginBottom:10
-  },
-  imageFood:{
-    width:((width/2)-20)-10,
-    height:((width/2)-20)-30,
-    backgroundColor:'transparent',
-    position:'absolute',
-    top:-45
-  },
-  divFood:{
-    width:(width/2)-20,
-    padding:10,
-    borderRadius:10,
-    marginTop:55,
-    marginBottom:5,
-    marginLeft:10,
-    alignItems:'center',
-    elevation:8,
-    shadowOpacity:0.3,
-    shadowRadius:50,
-    backgroundColor:'white',
+  itemTab: {
+    width: width / 4,
+    backgroundColor: 'white',
+    alignItems: 'center',
+    justifyContent: 'center'
   }
-});
+})
