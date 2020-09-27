@@ -9,9 +9,14 @@ import { Text,
   TouchableOpacity,
   TextInput
 } from 'react-native';
-var {height, width } = Dimensions.get('window');
-import Swiper from 'react-native-swiper'
 
+import Swiper from 'react-native-swiper';
+
+var {height, width } = Dimensions.get('window');
+//Connction to access the pre-populated shop_db.db
+import { openDatabase } from 'react-native-sqlite-storage';
+//Connction to access the pre-populated shop_db.db
+var db = openDatabase({ name: 'shop_db.db', createFromLocation : 1});
 // import AsyncStorage
 import AsyncStorage from '@react-native-community/async-storage';
 // import icons
@@ -50,6 +55,7 @@ export default class App extends Component {
   }
 
   render() {
+
     return (
       <ScrollView>
         <View style={{ flex: 1,backgroundColor:"#f2f2f2" }}>
@@ -91,6 +97,20 @@ export default class App extends Component {
   }
 
   onClickAddCart(data){
+    /* insertar pedido a base de datos */
+    db.transaction(function (tx) {
+      console.log(db)
+      tx.executeSql(
+        'INSERT INTO orders (name, price, url_image, category, quantity, description) VALUES (?,?,?,?,?,?)',
+        [data.name, data.price, data.image, data.categorie, 1, "comida hot" ],
+        (tx, results) => {
+          console.log('Results', results.rowsAffected);
+          if (results.rowsAffected > 0) {
+            console.log('Registrados');
+          } else console.log('Registration Failed');
+        }
+      );
+    });
 
     const itemcart = {
       food: data,
