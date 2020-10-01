@@ -22,12 +22,12 @@ export default class Cart extends Component {
                 // We have data!!
                 const cartfood = JSON.parse(cart)
                 this.setState({ dataCart: cartfood })
-            }
-        })
-            .catch((err) => {
-                alert(err)
-            })
     }
+})
+.catch((err) => {
+    alert(err)
+})
+}
 
     render() {
         return (
@@ -72,7 +72,7 @@ export default class Cart extends Component {
                         <Text style={{
                                 fontSize: 28,
                                 fontWeight: "bold",
-                                color: '33c37d',
+                                color: '#33c37d',
                                 textAlign: 'center'
                             }}>
                                 ${this.onLoadTotal()}
