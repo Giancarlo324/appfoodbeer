@@ -5,7 +5,6 @@ var { width } = Dimensions.get("window")
 // import Components
 import Food from './Food'
 import Cart from './Cart'
-import Address from './Address'
 import Profile from './Profile'
 // unable console yellow
 console.disableYellowBox = true;
@@ -27,7 +26,6 @@ export default class Index extends Component {
         {
           this.state.module == 1 ? <Food />
             : this.state.module == 2 ? <Cart />
-              : this.state.module == 3 ? <Address />
                 : <Profile />
         }
         <View style={styles.bottomTab}>
@@ -38,10 +36,6 @@ export default class Index extends Component {
           <TouchableOpacity style={styles.itemTab} onPress={() => this.setState({ module: 2 })}>
             <Icon name="md-basket" size={30} color={this.state.module == 2 ? "#900" : "gray"} />
             <Text>Cart</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.itemTab} onPress={() => this.setState({ module: 3 })}>
-            <Icon name="md-map" size={30} color={this.state.module == 3 ? "#900" : "gray"} />
-            <Text>Address</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.itemTab} onPress={() => this.setState({ module: 4 })}>
             <Icon name="person-circle-outline" size={30} color={this.state.module == 4 ? "#900" : "gray"} />
