@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
     shadowRadius: 50,
   },
   itemTab: {
-    width: width / 4,
+    width: width / 3,
     backgroundColor: 'white',
     alignItems: 'center',
     justifyContent: 'center'
