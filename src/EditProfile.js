@@ -69,7 +69,18 @@ export default class EditProfile extends Component {
                     <View style={styles.action}>
                         <Icon name="home" size={20} />
                         <TextInput
-                            placeholder="Dirección"
+                            placeholder="Dirección domicilio"
+                            placeholderTextColor="#666666"
+                            autoCorrect={false}
+                            style={[
+                                styles.textInput,
+                            ]}
+                        />
+                    </View>
+                    <View style={styles.action}>
+                        <Icon name="home" size={20} />
+                        <TextInput
+                            placeholder="Descripción (opcional)"
                             placeholderTextColor="#666666"
                             autoCorrect={false}
                             style={[

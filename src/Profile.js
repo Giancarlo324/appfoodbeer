@@ -58,7 +58,7 @@ const FoodScreen = ({navigation}) => {
               </View>
               <View style={styles.row}>
                 <Icon name="phone" color="#777777" size={20} />
-                <Text style={{ color: "#777777", marginLeft: 20 }}>3163965498</Text>
+                <Text style={{ color: "#777777", marginLeft: 20 }}>Num. Celuar</Text>
               </View>
               <View style={styles.row}>
                 <Icon name="email" color="#777777" size={20} />
