@@ -12,26 +12,14 @@ import Profile from './Profile'
 console.disableYellowBox = true;
 // import icons
 import Icon from 'react-native-vector-icons/Ionicons';
-import { openDatabase } from 'react-native-sqlite-storage';
+/* import { openDatabase } from 'react-native-sqlite-storage';
 //Connction to access the pre-populated shop_db.db
-var db = openDatabase({ name: 'shop_db.db', createFromLocation : 1});
+var db = openDatabase({ name: 'shop_db.db', createFromLocation : 1}); */
 
 export default class Index extends Component {
 
   constructor(props) {
     super(props);
-    db.transaction(function (tx) {
-      tx.executeSql(
-        'CREATE TABLE IF NOT EXISTS orders(name TEXT, price NUMERIC, url_image TEXT, category TEXT, quantity INTEGER, description TEXT)',
-        [],
-        (tx, results) => {
-          console.log('Results', results.rowsAffected);
-          if (results.rowsAffected> 0) {
-            console.log("SE CREO BD")
-          } else alert('Registration Failed');
-        }
-      );
-    });
     this.state = {
       module: 1,
     };

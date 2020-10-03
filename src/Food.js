@@ -10,13 +10,12 @@ import { Text,
   TextInput
 } from 'react-native';
 
-import Swiper from 'react-native-swiper';
+/* import { openDatabase } from 'react-native-sqlite-storage';
+//Connction to access the pre-populated shop_db.db
+var db = openDatabase({ name: 'shop_db.db', createFromLocation : 1}); */
 
+import Swiper from 'react-native-swiper';
 var {height, width } = Dimensions.get('window');
-//Connction to access the pre-populated shop_db.db
-import { openDatabase } from 'react-native-sqlite-storage';
-//Connction to access the pre-populated shop_db.db
-var db = openDatabase({ name: 'shop_db.db', createFromLocation : 1});
 // import AsyncStorage
 import AsyncStorage from '@react-native-community/async-storage';
 // import icons
@@ -97,48 +96,40 @@ export default class App extends Component {
   }
 
   onClickAddCart(data){
-    /* insertar pedido a base de datos */
-    db.transaction(function (tx) {
-      console.log(db)
-      tx.executeSql(
-        'INSERT INTO orders (name, price, url_image, category, quantity, description) VALUES (?,?,?,?,?,?)',
-        [data.name, data.price, data.image, data.categorie, 1, "comida hot" ],
-        (tx, results) => {
-          console.log('Results', results.rowsAffected);
-          if (results.rowsAffected > 0) {
-            console.log('Registrados');
-          } else console.log('Registration Failed');
-        }
-      );
-    });
 
     const itemcart = {
       food: data,
       quantity:  1,
       price: data.price
     }
- 
+
     AsyncStorage.getItem('cart').then((datacart)=>{
         if (datacart !== null) {
-          // We have data!!
-          const cart = JSON.parse(datacart)
-          cart.push(itemcart)
-          AsyncStorage.setItem('cart',JSON.stringify(cart));
+          // Si existen articulos en el carro.
+          const cart = JSON.parse(datacart);
+          if(cart.find(obj => obj.food.name == itemcart.food.name)){
+            alert('El producto ya esta agregado');
+          }else{
+            cart.push(itemcart);
+            AsyncStorage.setItem('cart',JSON.stringify(cart));
+            alert('Producto agregado')
+          }
         }
         else{
           const cart  = []
           cart.push(itemcart)
           AsyncStorage.setItem('cart',JSON.stringify(cart));
+          alert('Producto agregado')
         }
-        alert("Add Cart")
       })
       .catch((err)=>{
         alert(err)
-      })
+      });
   }
 
   _renderItemFood(item){
     let catg = this.state.selectCatg
+    let cantUnidades = 1;
     if(catg==0||catg==item.categorie)
     {
       return(
@@ -153,6 +144,16 @@ export default class App extends Component {
             </Text>
             <Text>Descp Food and Details</Text>
             <Text style={{fontSize:20,color:"green"}}>${item.price}</Text>
+
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <TouchableOpacity onPress={() => this.onChangeQual(i, false)}>
+                <Icon name="ios-remove-circle" size={35} color={"#33c37d"} />
+              </TouchableOpacity>
+                <Text style={{ paddingHorizontal: 8, fontWeight: 'bold', fontSize: 18 }}>{cantUnidades}</Text>
+              <TouchableOpacity onPress={() => cantUnidades+=1}>
+                <Icon name="ios-add-circle" size={35} color={"#33c37d"} />
+              </TouchableOpacity>
+            </View>
             
             <TouchableOpacity
             onPress={()=>this.onClickAddCart(item)}
@@ -165,9 +166,9 @@ export default class App extends Component {
               borderRadius:5,
               padding:4
             }}>
-            <Text style={{fontSize:18, color:"white", fontWeight:"bold"}}>Add Cart</Text>
+            <Text style={{fontSize:18, color:"white", fontWeight:"bold"}}>Añadir</Text>
             <View style={{width:10}} />
-            <Icon name="ios-add-circle" size={30} color={"white"} />
+            {/* <Icon name="ios-add-circle" size={30} color={"white"} /> */}
           </TouchableOpacity>
           </TouchableOpacity>
         )
